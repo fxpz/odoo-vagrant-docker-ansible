@@ -1,0 +1,36 @@
+---
+- hosts: all
+  roles:
+  - enrise.locale
+  tasks:
+  - name: install git
+    apt:
+      pkg: "{{item}}"
+      state: present
+    with_items: ['git', 'vim']
+
+- hosts: db
+  roles:
+  - ANXS.postgresql
+  - postgres_ssh_key
+  - modcloth.repmgr
+
+- hosts: db_master
+  tasks:
+  - name : repmgr user
+    postgresql_user:
+      name: repmgr
+      password: repmgr
+      encrypted: no
+      role_attr_flags: "SUPERUSER,REPLICATION,LOGIN"
+  - name: odoo user
+    postgresql_user:
+      name: "{{ odoo_db_user }}"
+      password: "{{ odoo_db_password }}"
+      encrypted: no
+      role_attr_flags: "SUPERUSER"
+
+- hosts: webserver
+  roles:
+  - azavea.pip
+  - odoo

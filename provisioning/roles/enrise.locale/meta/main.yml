@@ -1,0 +1,17 @@
+---
+galaxy_info:
+  author: Berry Langerak
+  description: A simple role to install locales on a Debian based system.
+  company: Enrise
+  license: BSD
+  min_ansible_version: 1.2
+
+  platforms:
+  - name: Ubuntu
+    versions:
+    - trusty
+
+  categories:
+  - system
+
+  dependencies: []

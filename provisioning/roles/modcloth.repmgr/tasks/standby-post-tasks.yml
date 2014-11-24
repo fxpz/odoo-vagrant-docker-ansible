@@ -1,0 +1,15 @@
+---
+- name: stop postgres
+  service: name=postgresql state=stopped
+
+- name: implode PG_DATA
+  shell: rm -rf {{ postgresql_data_directory }}/*
+
+- name: import hostkeys
+  shell: sudo su - postgres -c 'ssh-keyscan {{ postgres_master }} >> ~/.ssh/known_hosts'
+
+- name: clone master
+  shell: sudo su - postgres -c 'repmgr -D {{ postgresql_data_directory }} -d postgres -U repmgr -R postgres --force --verbose standby clone {{ postgres_master }}'
+
+- name: start postgres
+  service: name=postgresql state=started

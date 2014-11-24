@@ -1,0 +1,16 @@
+---
+repmgr_is_master: yes
+repmgr_node_id: 1
+
+postgresql_databases:
+  - name: odoo
+
+postgresql_pg_hba_trust_hosts: ["172.17.0.0/16"]
+postgresql_pg_hba_custom:
+  - name: replication
+    comment: replication
+    type: host
+    database: replication
+    user: repmgr
+    address: 172.17.0.0/16
+    method: trust

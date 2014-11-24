@@ -1,0 +1,6 @@
+---
+locale_enabled_locales: [it_IT.UTF-8, en_US.UTF-8]
+odoo_db_host: pgsqlmaster
+odoo_db_port: 5432
+odoo_db_user: odoo
+odoo_db_password: odoo

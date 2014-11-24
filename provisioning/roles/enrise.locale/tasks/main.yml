@@ -1,0 +1,5 @@
+
+---
+- name: Install locales
+  shell: locale-gen {{ locale_enabled_locales | join(' ') }}
+  sudo: yes
