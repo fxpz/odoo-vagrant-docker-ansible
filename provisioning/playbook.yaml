@@ -29,6 +29,24 @@
       password: "{{ odoo_db_password }}"
       encrypted: no
       role_attr_flags: "SUPERUSER"
+  - name: check encoding template1
+    shell: psql -c "SELECT pg_encoding_to_char(encoding) FROM pg_database WHERE datname = 'template1';" | grep UTF8
+    sudo: true
+    sudo_user: postgres
+    ignore_errors: True
+    register: template1_encoding
+  - name: change template encoding
+    shell: "{{ item }}"
+    sudo: true
+    sudo_user: postgres
+    when: template1_encoding|failed
+    with_items:
+      - psql -c "update pg_database set datallowconn = TRUE where datname = 'template0';"
+      - psql template0 -c "update pg_database set datistemplate = FALSE where datname = 'template1';"
+      - psql template0 -c "drop database template1;"
+      - psql template0 -c "create database template1 with template = template0 encoding = 'UTF8';"
+      - psql template0 -c "update pg_database set datistemplate = TRUE where datname = 'template1';"
+      - psql template1 -c "update pg_database set datallowconn = FALSE where datname = 'template0';"
 
 - hosts: webserver
   roles:
